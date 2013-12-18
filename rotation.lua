@@ -100,6 +100,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
   -- Tank
     { "17", { --Power Word: Shield
       "!tank.debuff(6788).any",
+	  "!tank.buff(17).any",
 	  "tank.health <= 100",
 	  "tank.spell(17).range"
 	}, "tank" },
@@ -124,6 +125,21 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "tank" },
 	
   -- Raid Healing
+    { "17", { --Power Word: Shield - Malkorok 
+	  "!lowest.debuff(6788).any", --Weakend Soul
+	  "!lowest.buff(17).any",
+	  "lowest.buff(142863)",
+	  "lowest.spell(17).range"
+	}, "lowest" },
+	{ "2060", { --Greater Healing - Malkorok
+	  "!player.moving",
+	  "lowest.buff(142864)",
+	  "lowest.spell(2060).range"
+	}, "lowest"},
+	{ "47540", { --Penance - Malkorok
+	  "lowest.buff(142863)",
+	  "lowest.spell(47540).range"
+	}, "lowest" },
     { "596", { --Prayer of Healing
 	  "!player.moving",
 	  "@coreHealing.needsHealing(80, 4)",
@@ -135,6 +151,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "lowest" },
 	{ "17", { --Power Word: Shield
 	  "!lowest.debuff(6788)", --Weakend Soul
+	  "!lowest.buff(17).any",
 	  "lowest.health <= 50",
 	  "lowest.spell(17).range"
 	}, "lowest" },
@@ -266,7 +283,8 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Solo", {
 	
   --Attonement
     { "17", { --Power Word Shield
-      "!player.debuff(6788)",
+      "!player.debuff(6788).any",
+	  "!player.buff(17).any",
 	  "player.health <= 60"
 	}},
 	{ "2061", "player.health <= 35", "Player" }, --Flash Heal
@@ -282,9 +300,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Solo", {
 	  "player.spell(129250).cooldown < .001",
 	  "target.spell(14914).range" 
 	}, "target" },
-	{ "47540", { --Penance 
-	   "target.spell(47540).range"
-	}, "target" },
+	{ "47540", "target.spell(47540).range", "target" }, --Penance 
 	{ "585", "target.spell(585).range", "target" },	--Smite
 	
 },{	
