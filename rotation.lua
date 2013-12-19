@@ -133,7 +133,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
   -- Raid Healing
     { "596", { --Prayer of Healing
 	  "!player.moving",
-	  "@coreHealing.needsHealing(80, 3)",
+	  "@coreHealing.needsHealing(80, 4)",
 	  "lowest.spell(596).range"
 	}, "lowest" },
     { "2061", { --Flash Heal
