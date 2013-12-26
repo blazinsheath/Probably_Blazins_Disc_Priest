@@ -3,4 +3,6 @@
 ## Notes: ProbablyEngine Custom Discipline Priest
 ## Dependencies: Probably
 
+
+libs\functions.lua
 rotation.lua

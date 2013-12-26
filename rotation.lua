@@ -18,7 +18,6 @@ ProbablyEngine.library.register('coreHealing', {
   end,
 })
 
-
 ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 
   -- Maintain these buffs
@@ -55,6 +54,16 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	
   --Agro
 	{ "586", "target.threat >= 80" }, -- Fade
+	
+  --Immerseus mouseover healing
+    { "!47540", { 
+	  "@blazins.mouseover",
+	  "mouseover.spell(47540).range"
+	}, "mouseover" },  
+	{ "!2061", { --Flash Heal
+	  "@blazins.mouseover",
+	  "mouseover.spell(2061).range"
+	}, "mouseover" },
 	
   --Mouse Over Healing
     { "47540", { -- Penance
@@ -135,6 +144,11 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "!player.moving",
 	  "@coreHealing.needsHealing(80, 4)",
 	  "lowest.spell(596).range"
+	}, "lowest" },
+	{ "2050", { -- Heal
+	  "lowest.health <= 65",
+	  "player.mana <= 20",
+	  "lowest.spell(2050).range"
 	}, "lowest" },
     { "2061", { --Flash Heal
 	  "!player.moving",
