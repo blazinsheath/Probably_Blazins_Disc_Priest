@@ -1,3 +1,5 @@
+if not blazins then blazins = {} end
+
 local lastRapture
 local blazins = {}
 
