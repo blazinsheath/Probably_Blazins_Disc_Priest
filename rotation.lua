@@ -2,16 +2,14 @@
 -- Custom Discipline Priest Rotation
 -- Created on Nov 14th 2013 8:58 pm
 
-
-
 ProbablyEngine.library.register('coreHealing', {
   needsHealing = function(percent, count)
     return ProbablyEngine.raid.needsHealing(tonumber(percent)) >= count
   end,
   needsDispelled = function(spell)
-    for _, unit in pairs(ProbablyEngine.raid.roster) do
-      if UnitDebuff(unit.unit, spell) then
-        ProbablyEngine.dsl.parsedTarget = unit.unit
+    for unit,_ in pairs(ProbablyEngine.raid.roster) do
+      if UnitDebuff(unit, spell) then
+        ProbablyEngine.dsl.parsedTarget = unit
         return true
       end
     end
@@ -43,9 +41,8 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
       "player.mana < 95",	  
       "target.spell(34433).range"
     }, "target" },	
-	{ "14914", { -- Power Word: Solace
+	{ "129250", { -- Power Word: Solace
 	  "!toggle.mouseOver",
-	  "player.spell(129250).cooldown < .001",
 	  "target.spell(129250).range" 
 	}, "target" },
 	{ "19236", { --Desperate Prayer
@@ -83,10 +80,6 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, nil },
     { "527", {
 	  "player.mana > 20",
-	  "@coreHealing.needsDispelled('Shadow Word: Bane')"
-	}, nil },
-    { "527", {
-	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Corrosive Blood')"
  	}, nil },
 	
@@ -113,36 +106,46 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "lowest" },  --Pain Suppression
 	
   -- Tank
-    { "108968", { --Void Shift
-	  "player.health >= 80",
-	  "tank.health <= 25",
+    { "17", { --Power Word: Shield
+	  "@blazins.checkRapture",
+      "!tank.debuff(6788).any",
+	  "!tank.buff(17).any",
+	  "tank.spell(17).range"
+	}, "tank" },
+    { "!108968", { --Void Shift
+	  "!tank.player",
+	  "player.health >= 75",
+	  "tank.health <= 30",
 	  "tank.spell(108968).range"
 	}, "tank" },
-    { "2061", { --Flash Heal
+	{ "!32546", { --Binding Heal
+	  "!tank.player",
+	  "tank.health <= 4",
+	  "player.health <= 60",
+	  "tank.spell(32546).range"
+	}, "tank" },
+    { "!2061", { --Flash Heal
 	  "!player.moving",
-	  "tank.health <= 30",
+	  "tank.health <= 40",
 	  "target.spell(2061).range"
 	}, "tank" },
 	{ "139", { --Renew
-	  "!tank.buff(139)", 
-	  "tank.health <= 90",
+	  "!tank.buff(139)",
+	  "tank.debuff(6788).any",
+	  "!player.spell(33076).cooldown", 
+	  "tank.health < 100",
 	  "tank.spell(139).range"
 	}, "tank" },
 	{ "33076", { --Prayer of Mending
 	  "tank.health <= 95",
 	  "tank.spell(33076).range"
 	}, "tank" },
-    { "17", { --Power Word: Shield
-      "!tank.debuff(6788).any",
-	  "!tank.buff(17).any",
-	  "tank.health <= 100",
-	  "tank.spell(17).range"
-	}, "tank" },
 	
+    
   -- Raid Healing
     { "596", { --Prayer of Healing
 	  "!player.moving",
-	  "@coreHealing.needsHealing(80, 4)",
+	  "@coreHealing.needsHealing(75, 4)",
 	  "lowest.spell(596).range"
 	}, "lowest" },
 	{ "2050", { -- Heal
@@ -150,27 +153,22 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "player.mana <= 20",
 	  "lowest.spell(2050).range"
 	}, "lowest" },
-    { "2061", { --Flash Heal
+    { "!2061", { --Flash Heal
 	  "!player.moving",
 	  "lowest.health <= 20",
 	  "lowest.spell(2061).range"
 	}, "lowest" },
-	{ "17", { --Power Word: Shield
+	{ "!17", { --Power Word: Shield
 	  "!lowest.debuff(6788).any", --Weakend Soul
 	  "!lowest.buff(17).any",
-	  "lowest.health <= 50",
+	  "lowest.health <= 30",
 	  "lowest.spell(17).range"
 	}, "lowest" },
 	{ "2060", { --Greater Healing
 	  "!player.moving",
 	  "lowest.health <= 50",
 	  "lowest.spell(2060).range"
-	}, "lowest"},
-	{ "139", { --Renew
-	  "!lowest.buff(139)", 
-	  "lowest.health <= 55",
-	  "lowest.spell(139).range"
-	}, "lowest"},
+	}, "lowest" },
 	{ "2050", { -- Heal
 	  "lowest.health <= 65",
 	  "lowest.spell(2050).range"
@@ -179,12 +177,15 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "lowest.health <= 75",
 	  "lowest.spell(47540).range"
 	}, "lowest" },
+	{ "2050", { -- Heal
+	  "tank.health <= 75",
+	  "tank.spell(2050).range"
+	}, "tank" },
 
   --Attonement    
 	{ "14914", { --Holy Fire
 	  "!toggle.mouseOver",
 	  "player.mana > 20",
-	  "player.spell(129250).cooldown < .001",
 	  "target.spell(14914).range" 
 	}, "target" },
 	{ "47540", { --Penance
@@ -291,12 +292,10 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Solo", {
 	  "target.debuff(589).duration < 2",
 	  "target.spell(589).range"
 	}, "target" },
-	{ "14914", { -- Power Word: Solace
-	  "player.spell(129250).cooldown < .001",
-	  "target.spell(14914).range" 
+	{ "129250", { -- Power Word: Solace
+	  "target.spell(129250).range" 
 	}, "target" },
 	{ "14914", { --Holy Fire
-	  "player.spell(129250).cooldown < .001",
 	  "target.spell(14914).range" 
 	}, "target" },
 	{ "47540", "target.spell(47540).range", "target" }, --Penance 
