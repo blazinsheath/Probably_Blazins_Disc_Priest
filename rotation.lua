@@ -26,7 +26,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "player.spell(81700).exists",
 	  "player.buff(81661).count = 5"	  --Archangel
 	}},
-	{"109964", "modifier.lshift" }, --Spirit Shell
+	{ "109964", "modifier.lshift" }, --Spirit Shell
 	{ "596", "player.spell(109964).cooldown >= 50", "lowest" }, --Prayer of Healing
 	
   -- Mana/Survival
@@ -112,19 +112,19 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "!tank.buff(17).any",
 	  "tank.spell(17).range"
 	}, "tank" },
-    { "!108968", { --Void Shift
+    { "108968", { --Void Shift
 	  "!tank.player",
 	  "player.health >= 75",
 	  "tank.health <= 30",
 	  "tank.spell(108968).range"
 	}, "tank" },
-	{ "!32546", { --Binding Heal
+	{ "32546", { --Binding Heal
 	  "!tank.player",
 	  "tank.health <= 4",
 	  "player.health <= 60",
 	  "tank.spell(32546).range"
 	}, "tank" },
-    { "!2061", { --Flash Heal
+    { "2061", { --Flash Heal
 	  "!player.moving",
 	  "tank.health <= 40",
 	  "target.spell(2061).range"
@@ -153,12 +153,12 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "player.mana <= 20",
 	  "lowest.spell(2050).range"
 	}, "lowest" },
-    { "!2061", { --Flash Heal
+    { "2061", { --Flash Heal
 	  "!player.moving",
 	  "lowest.health <= 20",
 	  "lowest.spell(2061).range"
 	}, "lowest" },
-	{ "!17", { --Power Word: Shield
+	{ "17", { --Power Word: Shield
 	  "!lowest.debuff(6788).any", --Weakend Soul
 	  "!lowest.buff(17).any",
 	  "lowest.health <= 30",
@@ -169,18 +169,10 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "lowest.health <= 50",
 	  "lowest.spell(2060).range"
 	}, "lowest" },
-	{ "2050", { -- Heal
-	  "lowest.health <= 65",
-	  "lowest.spell(2050).range"
-	}, "lowest" },
 	{ "47540", { --Penance
 	  "lowest.health <= 75",
 	  "lowest.spell(47540).range"
 	}, "lowest" },
-	{ "2050", { -- Heal
-	  "tank.health <= 75",
-	  "tank.spell(2050).range"
-	}, "tank" },
 
   --Attonement    
 	{ "14914", { --Holy Fire
