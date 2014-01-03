@@ -27,7 +27,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "player.buff(81661).count = 5"	  --Archangel
 	}},
 	{ "109964", "modifier.lshift" }, --Spirit Shell
-	{ "596", "player.spell(109964).cooldown >= 50", "lowest" }, --Prayer of Healing
+	{ "596", "player.buff(109964)", "lowest" }, --Prayer of Healing
 	
   -- Mana/Survival
   
@@ -73,8 +73,13 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "mouseover" },
  
   --Dispel SoO 
+    {"527", {
+	  "player.mana > 20",
+	  "player.spell(527).casted < 1",
+	  "@coreHealing.needsDispelled('Shadow Word: Bane')"
+	}, nil },
     { "527", {
-   	  "player.buff(Gift of the Titans)",
+   	  "player.buff(144363)",
 	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Mark of Arrogance')" 
 	}, nil },
@@ -190,11 +195,15 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "!player.moving",
 	  "target.spell(585).range"
 	}, "target" },
+	{ "/targetenemy [noexists]", "!target.exists" },
 	{ "/focus [@targettarget]" },
 	{ "/target [target=focustarget, harm, nodead]", "!target.exists" },
 	{ "/target [target=focustarget, harm, nodead]", "target.range > 40" },
+	
+	
 },{
   --Out of combat
+  
     { "47540", {
 	  "toggle.mouseOver",
    	  "mouseover.spell(47540).range"
