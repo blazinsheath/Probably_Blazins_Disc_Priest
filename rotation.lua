@@ -179,17 +179,17 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "mouseover" },
  
   --Dispel SoO 
-    {"!527", {
+    {"527", {
 	  "player.mana > 20",
 	  "player.spell(527).casted < 1",
 	  "@coreHealing.needsDispelled('Shadow Word: Bane')"
 	}, nil },
-    { "!527", {
+    { "527", {
    	  "player.debuff(144359)",
 	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Mark of Arrogance')" 
 	}, nil },
-    { "!527", {
+    { "527", {
 	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Corrosive Blood')"
  	}, nil },
