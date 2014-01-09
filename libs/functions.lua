@@ -5,13 +5,12 @@ local blazins = {}
 
 --mouseover healing Immerseus - Contaminated Puddle
 function blazins.mouseover()
- if UnitExists("mouseover")				
-	and not UnitIsPlayer("mouseover") then
-		local npcid = tonumber(UnitGUID("mouseover"):sub(6,10), 16) 				
-		if npcid == 71604
-		 then return true 
-        end
- end
+ if UnitExists("mouseover") and not UnitIsPlayer("mouseover") then
+   local npcid = tonumber(UnitGUID("mouseover"):sub(6,10), 16) 				
+   if npcid == 71604 then 
+	 return true 
+   end
+  end
 end
 
 function blazins.checkRapture()
@@ -22,6 +21,15 @@ function blazins.checkRapture()
   if time() - lastRapture > 12 then return true end
   return false
 end
+
+function blazins.bossCheck()
+  if UnitExists("boss1") then
+    local npcId = tonumber(UnitGUID("boss1"):sub(6,10), 16)
+    if npcId == 71454 then
+      return true 
+	end
+  end
+end 
 
 -- Register library
 ProbablyEngine.library.register("blazins", blazins)

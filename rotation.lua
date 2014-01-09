@@ -18,26 +18,131 @@ ProbablyEngine.library.register('coreHealing', {
 
 ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 
+  -- Malkorok Rotation  
+    {{
+	-- Maintain these buffs
+      { "21562", "!player.buff(21562).any" }, -- Fortitude
+      { "588", "!player.buff(588)" }, -- Inner Fire
+      { "89485" }, -- Inner Focus
+	  { "81700", "player.buff(81661).count = 5" },  --Archangel
+	  { "109964", "modifier.lshift" }, --Spirit Shell
+	  { "596", "player.buff(109964)", "lowest" }, --Prayer of Healing
+	
+    -- Mana/Survival
+  
+	  { "123040", { --Mindbender
+	    "player.mana < 95",
+	    "target.spell(123040).range"
+	  }, "target" },
+	  { "34433", { --Shadowfiend
+        "player.mana < 95",	  
+        "target.spell(34433).range"
+      }, "target" },	
+	  { "129250", { -- Power Word: Solace
+	    "!toggle.mouseOver",
+	    "target.spell(129250).range" 
+	  }, "target" },
+	  { "19236", { --Desperate Prayer
+	    "player.health <= 20" 
+	  }, "Player" },
+	  { "#5512", "player.health <= 35" },  --healthstone
+	
+    --Agro
+	  { "586", "target.threat >= 80" }, -- Fade
+	  
+	--Mouse Over Healing
+      { "47540", { -- Penance
+	    "toggle.mouseOver",
+	    "mouseover.spell(47540).range"
+	  }, "mouseover" },  
+	  { "2061", { --Flash Heal
+	    "toggle.mouseOver",
+	    "mouseover.spell(2061).range"
+	  }, "mouseover" },
+	  
+	--Tier6 CD's - CD's
+	  { "121135", "modifier.lcontrol", "player" },  --Cascade
+	  { "120517", "modifier.lcontrol", "player" }, --Halo
+	  { "110744","modifier.lcontrol", "player" }, --Divine Star
+	  { "62618", "modifier.rshift", "ground" }, --Power Word: Barrier
+	  { "10060", "modifier.cooldowns" }, --Power Infusion
+	  { "32375", "modifier.rcontrol", "ground" }, --Mass Dispel
+	  { "33206", {
+	    "toggle.painSup",
+	    "lowest.health <= 25 ", 
+  	    "lowest.spell(33206).range"
+	  }, "lowest" },  --Pain Suppression
+	
+    -- Tank
+      { "17", { --Power Word: Shield
+	    "@blazins.checkRapture",
+        "!tank.debuff(6788).any",
+	    "!tank.buff(17).any",
+	    "tank.spell(17).range"
+	  }, "tank" },
+	  { "33076", { --Prayer of Mending
+	    "tank.health <= 95",
+	    "tank.spell(33076).range"
+	  }, "tank" },
+	  
+	-- Raid Healing
+	{ "596", { --Prayer of Healing /Lucidity proc
+	    "!player.moving",
+		"player.buff(137323)",
+	    "lowest.spell(596).range"
+	  }, "lowest" },
+	  { "47540", { --Penance
+	    "lowest.spell(47540).range"
+	  }, "lowest" },
+	  { "596", { --Prayer of Healing
+	    "!player.moving",
+	    "lowest.spell(596).range"
+	  }, "lowest" },
+	  
+	  
+	  
+	--Attonement   
+	  { "14914", { --Holy Fire
+	    "!toggle.mouseOver",
+	    "player.mana > 20",
+		"player.buff(81661).count < 5",
+	    "target.spell(14914).range" 
+	  }, "target" },
+	  { "47540", { --Penance
+	    "player.mana > 20",
+		"player.buff(81661).count < 5",
+	    "target.spell(47540).range"
+	  }, "target"},
+ 	  { "585", { --Smite
+	    "player.mana > 20",
+	    "!player.moving",
+		"player.buff(81661).count < 5",
+	    "target.spell(585).range"
+	  }, "target" },  
+
+	  { "/targetenemy [noexists]", "!target.exists" },
+	  { "/focus [@targettarget]" },
+	  { "/target [target=focustarget, harm, nodead]", "target.range > 40" },
+	  
+	}, "@blazins.bossCheck()" },
+	
+   -- MAIN ROTATION
+	
   -- Maintain these buffs
     { "21562", "!player.buff(21562).any" }, -- Fortitude
     { "588", "!player.buff(588)" }, -- Inner Fire
     { "89485" }, -- Inner Focus
-	{ "81700", {
-	  "player.spell(81700).exists",
-	  "player.buff(81661).count = 5"	  --Archangel
-	}},
+	{ "81700", "player.buff(81661).count = 5" },--Archangel
 	{ "109964", "modifier.lshift" }, --Spirit Shell
 	{ "596", "player.buff(109964)", "lowest" }, --Prayer of Healing
 	
   -- Mana/Survival
   
 	{ "123040", { --Mindbender
-	  "player.spell(123040).exists",
 	  "player.mana < 95",
 	  "target.spell(123040).range"
 	}, "target" },
 	{ "34433", { --Shadowfiend
-	  "player.spell(34433).exists",	
       "player.mana < 95",	  
       "target.spell(34433).range"
     }, "target" },	
@@ -48,6 +153,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	{ "19236", { --Desperate Prayer
 	  "player.health <= 20" 
 	}, "Player" },
+	{ "5512", "player.health <= 35" },  --healthstone
 	
   --Agro
 	{ "586", "target.threat >= 80" }, -- Fade
@@ -73,35 +179,25 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "mouseover" },
  
   --Dispel SoO 
-    {"527", {
+    {"!527", {
 	  "player.mana > 20",
 	  "player.spell(527).casted < 1",
 	  "@coreHealing.needsDispelled('Shadow Word: Bane')"
 	}, nil },
-    { "527", {
-   	  "player.buff(144363)",
+    { "!527", {
+   	  "player.debuff(144359)",
 	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Mark of Arrogance')" 
 	}, nil },
-    { "527", {
+    { "!527", {
 	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Corrosive Blood')"
  	}, nil },
 	
-	
   --Tier6 CD's - CD's
-	{ "121135", {
-	  "player.spell(121135).exists",
-	  "modifier.lcontrol"
-	}, "player" },  --Cascade
-	{ "120517", {
-  	  "player.spell(120517).exists",
-	  "modifier.lcontrol"
-	}, "player" }, --Halo
-	{ "110744", {
-	  "player.spell(110744).exists",
-	  "modifier.lcontrol"
-	}, "player" }, --Divine Star
+	{ "121135", "modifier.lcontrol", "player" },  --Cascade
+	{ "120517", "modifier.lcontrol", "player" }, --Halo
+	{ "110744", "modifier.lcontrol", "player" }, --Divine Star
 	{ "62618", "modifier.rshift", "ground" }, --Power Word: Barrier
 	{ "10060", "modifier.cooldowns" }, --Power Infusion
 	{ "32375", "modifier.rcontrol", "ground" }, --Mass Dispel
@@ -110,6 +206,8 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "lowest.health <= 25 ", 
   	  "lowest.spell(33206).range"
 	}, "lowest" },  --Pain Suppression
+	
+	
 	
   -- Tank
     { "17", { --Power Word: Shield
@@ -149,6 +247,11 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	
     
   -- Raid Healing
+    { "596", { --Prayer of Healing /Lucidity proc
+	    "!player.moving",
+		"player.buff(137323)",
+	    "lowest.spell(596).range"
+	  }, "lowest" },
     { "596", { --Prayer of Healing
 	  "!player.moving",
 	  "@coreHealing.needsHealing(75, 4)",
@@ -197,7 +300,6 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "target" },
 	{ "/targetenemy [noexists]", "!target.exists" },
 	{ "/focus [@targettarget]" },
-	{ "/target [target=focustarget, harm, nodead]", "!target.exists" },
 	{ "/target [target=focustarget, harm, nodead]", "target.range > 40" },
 	
 	
@@ -247,24 +349,12 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Solo", {
   --Buffs
 	{ "21562", "!player.buff(21562).any" }, --Fortitude
     { "588", "!player.buff(588)" }, --Inner Fire
-	{ "81700", {
-	  "player.spell(81700).exists",
-	  "player.buff(81661).count = 5" --Archangel
-	}},  
+	{ "81700", "player.buff(81661).count = 5" },  --Archangel 
 	
 	--Tier6 CD's
-	{ "121135", {
-	  "player.spell(121135).exists",
-	  "modifier.lcontrol"
-	}, "player" }, --Cascade
-	{ "120517", {
-  	  "player.spell(120517).exists",
-	  "modifier.lcontrol"
-	}, "player" }, --Halo
-	{ "110744", {
-	  "player.spell(110744).exists",
-	  "modifier.lcontrol"
-	}, "player" }, --Divine Star
+	{ "121135", "modifier.lcontrol", "player" }, --Cascade
+	{ "120517", "modifier.lcontrol", "player" }, --Halo
+	{ "110744", "modifier.lcontrol", "player" }, --Divine Star
 	{ "10060", "modifier.cooldowns" },
 	
   --Dispel
@@ -273,12 +363,10 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Solo", {
 	
   -- Mana
 	{ "123040", { --Mindbender
-	  "player.spell(123040).exists",
 	  "player.mana < 95",
 	  "target.spell(123040).range"
 	}, "target" },
 	{ "34433", { --Shadowfiend
-	  "player.spell(34433).exists",
       "player.mana < 95",  
       "target.spell(34433).range" 
     }, "target" },	
