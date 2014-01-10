@@ -99,8 +99,6 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	    "lowest.spell(596).range"
 	  }, "lowest" },
 	  
-	  
-	  
 	--Attonement   
 	  { "14914", { --Holy Fire
 	    "!toggle.mouseOver",
@@ -206,7 +204,11 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "lowest.health <= 25 ", 
   	  "lowest.spell(33206).range"
 	}, "lowest" },  --Pain Suppression
-	
+	{ "596", { --Prayer of Healing
+	  "!player.moving",
+	  "modifier.lalt",
+	  "lowest.spell(596).range"
+	}, "lowest" },
 	
 	
   -- Tank
@@ -247,16 +249,12 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	
     
   -- Raid Healing
-    { "596", { --Prayer of Healing /Lucidity proc
+    { "!596", { --Prayer of Healing /Lucidity proc
+	    "!modifier.last",
 	    "!player.moving",
 		"player.buff(137323)",
 	    "lowest.spell(596).range"
 	  }, "lowest" },
-    { "596", { --Prayer of Healing
-	  "!player.moving",
-	  "@coreHealing.needsHealing(75, 4)",
-	  "lowest.spell(596).range"
-	}, "lowest" },
 	{ "2050", { -- Heal
 	  "lowest.health <= 65",
 	  "player.mana <= 20",
