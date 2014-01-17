@@ -17,62 +17,97 @@ ProbablyEngine.library.register('coreHealing', {
 })
 
 ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
-
-  -- Malkorok Rotation  
-    {{
-	-- Maintain these buffs
-      { "21562", "!player.buff(21562).any" }, -- Fortitude
-      { "588", "!player.buff(588)" }, -- Inner Fire
-      { "89485" }, -- Inner Focus
-	  { "81700", "player.buff(81661).count = 5" },  --Archangel
-	  { "109964", "modifier.lshift" }, --Spirit Shell
-	  { "596", "player.buff(109964)", "lowest" }, --Prayer of Healing
 	
-    -- Mana/Survival
+	
+  -- Maintain these buffs
+    { "21562", "!player.buff(21562).any" }, -- Fortitude
+    { "588", "!player.buff(588)" }, -- Inner Fire
+    { "89485" }, -- Inner Focus
+	{ "81700", "player.buff(81661).count = 5" },--Archangel
+	{ "109964", "modifier.lshift" }, --Spirit Shell
+	{ "596", "player.buff(109964)", "lowest" }, --Prayer of Healing
+	
+  -- Mana/Survival
   
-	  { "123040", { --Mindbender
-	    "player.mana < 95",
-	    "target.spell(123040).range"
-	  }, "target" },
-	  { "34433", { --Shadowfiend
-        "player.mana < 95",	  
-        "target.spell(34433).range"
-      }, "target" },	
-	  { "129250", { -- Power Word: Solace
-	    "!toggle.mouseOver",
-	    "target.spell(129250).range" 
-	  }, "target" },
-	  { "19236", { --Desperate Prayer
-	    "player.health <= 20" 
-	  }, "Player" },
-	  { "#5512", "player.health <= 35" },  --healthstone
+	{ "123040", { --Mindbender
+	  "player.mana < 95",
+	  "target.spell(123040).range"
+	}, "target" },
+	{ "34433", { --Shadowfiend
+      "player.mana < 70",	  
+      "target.spell(34433).range"
+    }, "target" },	
+	{ "129250", { -- Power Word: Solace
+	  "!toggle.mouseOver",
+	  "target.spell(129250).range" 
+	}, "target" },
+	{ "19236", { --Desperate Prayer
+	  "player.health <= 20" 
+	}, "Player" },
+	{ "5512", "player.health <= 35" },  --healthstone
 	
-    --Agro
-	  { "586", "target.threat >= 80" }, -- Fade
-	  
-	--Mouse Over Healing
-      { "47540", { -- Penance
-	    "toggle.mouseOver",
-	    "mouseover.spell(47540).range"
-	  }, "mouseover" },  
-	  { "2061", { --Flash Heal
-	    "toggle.mouseOver",
-	    "mouseover.spell(2061).range"
-	  }, "mouseover" },
-	  
-	--Tier6 CD's - CD's
-	  { "121135", "modifier.lcontrol", "player" },  --Cascade
-	  { "120517", "modifier.lcontrol", "player" }, --Halo
-	  { "110744","modifier.lcontrol", "player" }, --Divine Star
-	  { "62618", "modifier.rshift", "ground" }, --Power Word: Barrier
-	  { "10060", "modifier.cooldowns" }, --Power Infusion
-	  { "32375", "modifier.rcontrol", "ground" }, --Mass Dispel
-	  { "33206", {
-	    "toggle.painSup",
-	    "lowest.health <= 25 ", 
-  	    "lowest.spell(33206).range"
-	  }, "lowest" },  --Pain Suppression
+  --Agro
+	{ "586", "target.threat >= 80" }, -- Fade
 	
+  --Immerseus mouseover healing
+    { "!47540", { 
+	  "@blazins.mouseover",
+	  "mouseover.spell(47540).range"
+	}, "mouseover" },  
+	{ "!2061", { --Flash Heal
+	  "@blazins.mouseover",
+	  "mouseover.spell(2061).range"
+	}, "mouseover" },
+	
+  --Mouse Over Healing
+    { "47540", { -- Penance
+	  "toggle.mouseOver",
+	  "mouseover.spell(47540).range"
+	}, "mouseover" },  
+	{ "2061", { --Flash Heal
+	  "toggle.mouseOver",
+	  "mouseover.spell(2061).range"
+	}, "mouseover" },
+ 
+  --Dispel SoO 
+    {"!527", {
+	  "!modifier.last",
+	  "player.mana > 20",
+	  "player.spell(527).casted < 1",
+	  "@coreHealing.needsDispelled('Shadow Word: Bane')"
+	}, nil },
+    { "!527", {
+	  "!modifier.last",
+   	  "player.debuff(144359)",
+	  "player.mana > 20",
+	  "@coreHealing.needsDispelled('Mark of Arrogance')" 
+	}, nil },
+    { "!527", {
+	  "!modifier.last",
+	  "player.mana > 20",
+	  "@coreHealing.needsDispelled('Corrosive Blood')"
+ 	}, nil },
+	
+  --Tier6 CD's - CD's
+	{ "121135", "modifier.lcontrol", "player" },  --Cascade
+	{ "120517", "modifier.lcontrol", "player" }, --Halo
+	{ "110744", "modifier.lcontrol", "player" }, --Divine Star
+	{ "62618", "modifier.rshift", "ground" }, --Power Word: Barrier
+	{ "10060", "modifier.cooldowns" }, --Power Infusion
+	{ "!32375", "modifier.rcontrol", "ground" }, --Mass Dispel
+	{ "33206", {
+	  "toggle.painSup",
+	  "lowest.health <= 25 ", 
+  	  "lowest.spell(33206).range"
+	}, "lowest" },  --Pain Suppression
+	{ "596", { --Prayer of Healing
+	  "!player.moving",
+	  "modifier.lalt",
+	  "lowest.spell(596).range"
+	}, "lowest" },
+	
+	-- MALKOROK ROTATION
+    {{
     -- Tank
       { "17", { --Power Word: Shield
 	    "@blazins.checkRapture",
@@ -124,92 +159,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  
 	}, "@blazins.bossCheck()" },
 	
-   -- MAIN ROTATION
-	
-  -- Maintain these buffs
-    { "21562", "!player.buff(21562).any" }, -- Fortitude
-    { "588", "!player.buff(588)" }, -- Inner Fire
-    { "89485" }, -- Inner Focus
-	{ "81700", "player.buff(81661).count = 5" },--Archangel
-	{ "109964", "modifier.lshift" }, --Spirit Shell
-	{ "596", "player.buff(109964)", "lowest" }, --Prayer of Healing
-	
-  -- Mana/Survival
-  
-	{ "123040", { --Mindbender
-	  "player.mana < 95",
-	  "target.spell(123040).range"
-	}, "target" },
-	{ "34433", { --Shadowfiend
-      "player.mana < 95",	  
-      "target.spell(34433).range"
-    }, "target" },	
-	{ "129250", { -- Power Word: Solace
-	  "!toggle.mouseOver",
-	  "target.spell(129250).range" 
-	}, "target" },
-	{ "19236", { --Desperate Prayer
-	  "player.health <= 20" 
-	}, "Player" },
-	{ "5512", "player.health <= 35" },  --healthstone
-	
-  --Agro
-	{ "586", "target.threat >= 80" }, -- Fade
-	
-  --Immerseus mouseover healing
-    { "!47540", { 
-	  "@blazins.mouseover",
-	  "mouseover.spell(47540).range"
-	}, "mouseover" },  
-	{ "!2061", { --Flash Heal
-	  "@blazins.mouseover",
-	  "mouseover.spell(2061).range"
-	}, "mouseover" },
-	
-  --Mouse Over Healing
-    { "47540", { -- Penance
-	  "toggle.mouseOver",
-	  "mouseover.spell(47540).range"
-	}, "mouseover" },  
-	{ "2061", { --Flash Heal
-	  "toggle.mouseOver",
-	  "mouseover.spell(2061).range"
-	}, "mouseover" },
- 
-  --Dispel SoO 
-    {"527", {
-	  "player.mana > 20",
-	  "player.spell(527).casted < 1",
-	  "@coreHealing.needsDispelled('Shadow Word: Bane')"
-	}, nil },
-    { "527", {
-   	  "player.debuff(144359)",
-	  "player.mana > 20",
-	  "@coreHealing.needsDispelled('Mark of Arrogance')" 
-	}, nil },
-    { "527", {
-	  "player.mana > 20",
-	  "@coreHealing.needsDispelled('Corrosive Blood')"
- 	}, nil },
-	
-  --Tier6 CD's - CD's
-	{ "121135", "modifier.lcontrol", "player" },  --Cascade
-	{ "120517", "modifier.lcontrol", "player" }, --Halo
-	{ "110744", "modifier.lcontrol", "player" }, --Divine Star
-	{ "62618", "modifier.rshift", "ground" }, --Power Word: Barrier
-	{ "10060", "modifier.cooldowns" }, --Power Infusion
-	{ "32375", "modifier.rcontrol", "ground" }, --Mass Dispel
-	{ "33206", {
-	  "toggle.painSup",
-	  "lowest.health <= 25 ", 
-  	  "lowest.spell(33206).range"
-	}, "lowest" },  --Pain Suppression
-	{ "596", { --Prayer of Healing
-	  "!player.moving",
-	  "modifier.lalt",
-	  "lowest.spell(596).range"
-	}, "lowest" },
-	
+	-- MAIN ROTATION
 	
   -- Tank
     { "17", { --Power Word: Shield
@@ -303,7 +253,6 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	
 },{
   --Out of combat
-  
     { "47540", {
 	  "toggle.mouseOver",
    	  "mouseover.spell(47540).range"
