@@ -235,7 +235,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	}, "lowest" },
 	{ "2060", { --Greater Healing
 	  "!player.moving",
-	  "lowest.health <= 100",
+	  "lowest.health <= 50",
 	  "lowest.spell(2060).range"
 	}, "lowest" },
 	{ "47540", { --Penance

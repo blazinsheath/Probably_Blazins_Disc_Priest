@@ -42,9 +42,9 @@ function blazins.stopCast(unit)
   if stop then
     if UnitCastingInfo("player") or UnitChannelInfo("player") then
 	 local CastFinish = endTime / 1000 - GetTime()
-      if CastFinish <= .25 then
-        return true
-      end
+     if CastFinish <= .25 then
+       return true
+     end
 	end
   end
   return false
