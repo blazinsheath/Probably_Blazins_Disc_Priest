@@ -29,7 +29,26 @@ function blazins.bossCheck()
       return true 
 	end
   end
-end 
+end
+
+function blazins.stopCast(unit)
+  if UnitBuff("player", 31821) then return false end -- Devo
+  if not unit then unit = "boss1" end
+  local spell, _, _, _, _, endTime = UnitCastingInfo(unit)
+  local stop = false
+  if spell == GetSpellInfo(138763) then stop = true end -- Dark Animus
+  if spell == GetSpellInfo(137457) then stop = true end -- Oondasta
+  if spell == GetSpellInfo(143343) then stop = true end -- Thok
+  if stop then
+    if UnitCastingInfo("player") or UnitChannelInfo("player") then
+	 local CastFinish = endTime / 1000 - GetTime()
+      if CastFinish <= .25 then
+        return true
+      end
+	end
+  end
+  return false
+end
 
 -- Register library
 ProbablyEngine.library.register("blazins", blazins)
