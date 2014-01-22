@@ -50,7 +50,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	{ "19236", { --Desperate Prayer
 	  "player.health <= 20" 
 	}, "Player" },
-	{ "5512", "player.health <= 35" },  --healthstone
+	{ "#5512", "player.health <= 35" },  --healthstone
 	
   --Agro
 	{ "586", "target.threat >= 80" }, -- Fade
@@ -88,7 +88,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Mark of Arrogance')" 
 	}, nil },
-    { "!527", {
+    { "527", {
 	  "!modifier.last",
 	  "player.mana > 20",
 	  "@coreHealing.needsDispelled('Corrosive Blood')"
@@ -242,6 +242,7 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "lowest.health <= 75",
 	  "lowest.spell(47540).range"
 	}, "lowest" },
+	
     --Attonement    
 	{ "14914", { --Holy Fire
 	  "!toggle.mouseOver",
@@ -257,15 +258,10 @@ ProbablyEngine.rotation.register_custom(256, "Blazins Disc Priest", {
 	  "!player.moving",
 	  "target.spell(585).range"
 	}, "target" },
-	
-	
-	
 	{ "/targetenemy [noexists]", "!target.exists" },
 	{ "/focus [@targettarget]" },
 	{ "/target [target=focustarget, harm, nodead]", "target.range > 40" },
 	 
-  
-	
 },{
   --Out of combat
     { "47540", {
